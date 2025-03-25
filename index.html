@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa de Proyectos - Universidad Iberoamericana</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: #8c1515;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h1 {
+            margin: 0;
+        }
+        .map-container {
+            position: relative;
+            margin: 0 auto;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        .map-image {
+            width: 100%;
+            display: block;
+            /* max-height: 2500px;
+            max-width: 3500px; */
+        }
+        .map-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .hotspot {
+            position: absolute;
+            background-color: rgba(76, 175, 80, 0.6);
+            border: 2px solid #388e3c;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .hotspot:hover {
+            background-color: rgba(76, 175, 80, 0.9);
+            transform: scale(1.2);
+        }
+        .hotspot.invernadero {
+            left: 18%;
+            top: 75%;
+        }
+        /* Add more hotspots as needed */
+        .hotspot.idit {
+            left: 58%;
+            top: 35%;
+        }
+        .hotspot.fablab {
+            left: 43%;
+            top: 60%;
+        }
+        .hotspot.grupo36 {
+            left: 34%;
+            top: 45%;
+        }
+        .hotspot.autenilum {
+            left: 68%;
+            top: 35%;
+        }
+        
+        .project-info {
+            display: none;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        .project-info h2 {
+            color: #8c1515;
+            margin-top: 0;
+        }
+        .project-info p {
+            line-height: 1.6;
+        }
+        .project-info .btn {
+            display: inline-block;
+            background-color: #8c1515;
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 15px;
+            transition: background-color 0.3s ease;
+        }
+        .project-info .btn:hover {
+            background-color: #6c0f0f;
+        }
+        .close-btn {
+            float: right;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #888;
+        }
+        .close-btn:hover {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Proyectos IoT - Universidad Iberoamericana</h1>
+    </header>
+    
+    <div class="container">
+        <div class="map-container">
+            <img src="preview.webp" alt="Mapa Universidad Iberoamericana" class="map-image">
+            <div class="map-overlay">
+                <!-- Hotspots for different projects -->
+                <div class="hotspot invernadero" onclick="showProject('invernadero')"></div>
+                <div class="hotspot idit" onclick="showProject('idit')"></div>
+                <div class="hotspot fablab" onclick="showProject('fablab')"></div>
+                <div class="hotspot grupo36" onclick="showProject('grupo36')"></div>
+                <div class="hotspot autenilum" onclick="showProject('autenilum')"></div>
+            </div>
+        </div>
+        
+        <!-- Project information panels -->
+        <div id="invernadero-info" class="project-info">
+            <button class="close-btn" onclick="hideProject('invernadero')">×</button>
+            <h2>Sistema de Monitoreo del Invernadero</h2>
+            <p>Este proyecto utiliza sensores conectados a ESP32 para monitorear las condiciones ambientales del invernadero de la universidad, incluyendo temperatura, humedad, nivel de luz y humedad del suelo.</p>
+            <p>Los datos son enviados a un dashboard en tiempo real que permite a los encargados tomar decisiones informadas sobre el cuidado de las plantas.</p>
+            <a href="#dashboard-invernadero" class="btn">Ver Dashboard</a>
+        </div>
+        
+        <div id="idit-info" class="project-info">
+            <button class="close-btn" onclick="hideProject('idit')">×</button>
+            <h2>IDIT - Control de Acceso Inteligente</h2>
+            <p>Sistema de control de acceso basado en ESP32 para el Instituto de Diseño e Innovación Tecnológica.</p>
+            <p>Implementa reconocimiento de tarjetas RFID y registro de entradas/salidas en tiempo real.</p>
+            <a href="#dashboard-idit" class="btn">Ver Dashboard</a>
+        </div>
+        
+        <div id="fablab-info" class="project-info">
+            <button class="close-btn" onclick="hideProject('fablab')">×</button>
+            <h2>FabLAB - Monitoreo de Equipos</h2>
+            <p>Sistema que monitorea el uso y estado de los equipos del laboratorio de fabricación.</p>
+            <p>Permite hacer seguimiento del tiempo de uso, consumo energético y mantenimiento programado.</p>
+            <a href="#dashboard-fablab" class="btn">Ver Dashboard</a>
+        </div>
+        
+        <div id="grupo36-info" class="project-info">
+            <button class="close-btn" onclick="hideProject('grupo36')">×</button>
+            <h2>Grupo 36 - Estación Meteorológica</h2>
+            <p>Estación meteorológica completa basada en ESP32 que mide parámetros ambientales en el campus.</p>
+            <p>Los datos recopilados ayudan en investigaciones y en la planificación de actividades al aire libre.</p>
+            <a href="#dashboard-grupo36" class="btn">Ver Dashboard</a>
+        </div>
+        
+        <div id="autenilum-info" class="project-info">
+            <button class="close-btn" onclick="hideProject('autenilum')">×</button>
+            <h2>Autenilum - Sistema de Iluminación Inteligente</h2>
+            <p>Control automatizado de la iluminación en las aulas y pasillos del edificio Autenilum.</p>
+            <p>Optimiza el consumo de energía adaptándose a las condiciones de luz natural y ocupación.</p>
+            <a href="#dashboard-autenilum" class="btn">Ver Dashboard</a>
+        </div>
+    </div>
+    
+    <script>
+        // Function to display project information
+        function showProject(projectId) {
+            // Hide all project info panels
+            var infoPanels = document.getElementsByClassName('project-info');
+            for (var i = 0; i < infoPanels.length; i++) {
+                infoPanels[i].style.display = 'none';
+            }
+            
+            // Show the selected project info
+            document.getElementById(projectId + '-info').style.display = 'block';
+            
+            // Scroll to the info panel
+            document.getElementById(projectId + '-info').scrollIntoView({behavior: 'smooth'});
+        }
+        
+        // Function to hide project information
+        function hideProject(projectId) {
+            document.getElementById(projectId + '-info').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
