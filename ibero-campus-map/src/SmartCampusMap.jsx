@@ -139,12 +139,13 @@ const SmartCampusMap = ({ onBack, isMobile = window.innerWidth <= 768 }) => {
       // Create marker element
       const markerEl = createMarkerElement(location);
       
-      // Create popup with responsive sizing
+      // Create popup with responsive sizing and proper offset for mobile
       const popup = new mapboxgl.Popup({
-        offset: 25,
-        closeButton: false,
+        offset: isMobile ? [0, -15] : 25,  // Different offset for mobile
+        closeButton: true,
         closeOnClick: true,
-        maxWidth: isMobile ? '240px' : '300px'
+        maxWidth: isMobile ? '240px' : '300px',
+        anchor: isMobile ? 'bottom' : 'bottom',  // Always anchor to bottom on mobile
       }).setHTML(
         `<div>
           <h3 style="font-weight: bold; margin-bottom: 5px; font-size: ${isMobile ? '14px' : '16px'};">${location.name}</h3>
@@ -436,11 +437,13 @@ const SmartCampusMap = ({ onBack, isMobile = window.innerWidth <= 768 }) => {
         
         // Create and set a new popup
         const popup = new mapboxgl.Popup({
-          offset: 25,
+          offset: isMobile ? [0, -15] : 25,
           closeButton: true,
           closeOnClick: true,
           maxWidth: isMobile ? '220px' : '300px',
-          className: 'custom-popup'
+          className: 'custom-popup',
+          anchor: isMobile ? 'bottom' : 'bottom',  // Force bottom anchor on mobile
+          focusAfterOpen: false  // Prevent keyboard from opening on mobile
         }).setHTML(
           `<div>
             <h3 style="font-weight: bold; margin-bottom: 5px; font-size: ${isMobile ? '14px' : '16px'};">${selectedLocation.name}</h3>

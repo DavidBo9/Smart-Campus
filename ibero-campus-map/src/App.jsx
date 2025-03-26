@@ -164,7 +164,10 @@ const App = () => {
     // After animation, show the full interactive map
     setTimeout(() => {
       setShowMap(true);
-      setTransitioning(false);
+      // Keep transitioning true for a moment to ensure smooth transition
+      setTimeout(() => {
+        setTransitioning(false);
+      }, 100);
     }, 1500);
   };
 
@@ -189,14 +192,14 @@ const App = () => {
 
   if (showMap) {
     return (
-      <div className={`transition-opacity duration-500 ${transitioning ? 'opacity-0' : 'opacity-100'}`}>
+      <div className={`transition-opacity duration-500 absolute inset-0 z-30 ${transitioning ? 'opacity-0' : 'opacity-100'}`}>
         <SmartCampusMap onBack={handleBackFromMap} isMobile={isMobile} />
       </div>
     );
   }
 
   return (
-    <div className={`relative w-full h-screen overflow-hidden bg-beige transition-opacity duration-500 ${transitioning ? 'opacity-0' : 'opacity-100'}`}>
+    <div className={`relative w-full min-h-screen bg-beige transition-opacity duration-500 ${transitioning ? 'opacity-0' : 'opacity-100'}`}>
       {/* Background map */}
       <div 
         ref={mapContainerRef}

@@ -12,6 +12,7 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  overflow-y: auto; /* Allow vertical scrolling */
   -webkit-tap-highlight-color: transparent; /* Removes tap highlight on mobile */
 }
 
