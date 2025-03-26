@@ -11,7 +11,7 @@ const IberoLogo = () => (
     <div className="text-2xl md:text-3xl font-serif font-bold mr-2">
       <span className="text-red-700">IBERO</span>
     </div>
-    <span className="text-gray-700">SmartCampus</span>
+    <span className="text-gray-700">Viewbook</span>
   </div>
 );
 
@@ -196,7 +196,7 @@ const App = () => {
   }
 
   return (
-    <div className={`relative w-full min-h-screen bg-beige transition-opacity duration-500 ${transitioning ? 'opacity-0' : 'opacity-100'}`} style={{ overflowY: 'auto' }}>
+    <div className={`relative w-full h-screen overflow-hidden bg-beige transition-opacity duration-500 ${transitioning ? 'opacity-0' : 'opacity-100'}`}>
       {/* Background map */}
       <div 
         ref={mapContainerRef}
