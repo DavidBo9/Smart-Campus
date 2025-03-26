@@ -1,8 +1,10 @@
-/* IBERO Puebla color scheme */
+@import "tailwindcss";
+
 :root {
   --ibero-red: #C8102E;
   --ibero-dark-red: #9A0C23;
-  --ibero-white: hsl(40, 20%, 91%);
+  --ibero-beige: #F4F1EA;
+  --ibero-yellow: #FFD100;
   --ibero-lightred: #ff5151;
 }
 
@@ -11,14 +13,20 @@ body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   margin: 0;
   padding: 0;
+  width: 100%;
+  min-height: 100vh;
   overflow-x: hidden;
-  overflow-y: auto; /* Allow vertical scrolling */
   -webkit-tap-highlight-color: transparent; /* Removes tap highlight on mobile */
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
 }
 
 /* Background beige color */
 .bg-beige {
-  background-color: var(--ibero-white);
+  background-color: var(--ibero-beige);
 }
 
 /* IBERO logo styling */
@@ -83,9 +91,9 @@ button:active {
 
 /* Map container styling */
 .map-container {
+  position: relative;
   width: 100%;
   height: 100vh;
-  position: relative;
 }
 
 /* Mobile menu button - visible only on small screens */
@@ -101,7 +109,7 @@ button:active {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--ibero-white);
+  background-color: var(--ibero-beige);
   z-index: 50;
   flex-direction: column;
   justify-content: center;
@@ -138,131 +146,6 @@ button:active {
   padding: 0.5rem 1rem;
 }
 
-/* Mobile responsiveness */
-@media (max-width: 768px) {
-  /* Header adjustments */
-  header {
-    padding: 0.75rem;
-  }
-  
-  /* Show mobile menu button, hide regular nav */
-  .mobile-menu-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: white;
-    border: none;
-    border-radius: 50%;
-    width: 2.5rem;
-    height: 2.5rem;
-    margin-left: auto;
-  }
-  
-  .desktop-nav {
-    display: none;
-  }
-  
-  /* Main content adjustments */
-  h1 {
-    font-size: clamp(2.5rem, 10vw, 3.5rem);
-    margin-bottom: 1rem;
-  }
-  
-  .icon-container {
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-  
-  .button-container {
-    flex-direction: column;
-    width: 100%;
-  }
-  
-  .button-container button {
-    width: 100%;
-    margin-bottom: 0.75rem;
-    padding: 0.75rem 1rem;
-    text-align: center;
-    justify-content: center;
-  }
-  
-  /* Adjust icon containers for mobile */
-  .instruction-container {
-    flex-direction: column;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-  }
-  
-  .instruction-item {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 1rem;
-  }
-  
-  /* Adjust badge positioning */
-  .floating-badges {
-    position: fixed !important;
-    bottom: 1rem !important;
-    right: 1rem !important;
-    z-index: 20 !important;
-    flex-direction: row !important;
-    gap: 0.5rem !important;
-    margin-top: 0 !important;
-  }
-  
-  .floating-badges > div {
-    margin-bottom: 0 !important;
-    margin-right: 0.5rem !important;
-  }
-  
-  .badge {
-    transform: scale(0.85);
-    background-color: rgba(255, 255, 255, 0.95) !important;
-    backdrop-filter: blur(5px);
-  }
-}
-
-/* Smaller mobile devices */
-@media (max-width: 480px) {
-  header {
-    padding: 0.5rem;
-  }
-  
-  .logo-container {
-    font-size: 0.85rem;
-  }
-  
-  h1 {
-    font-size: 2.25rem;
-    margin-bottom: 0.75rem;
-  }
-  
-  p {
-    font-size: 1rem !important;
-  }
-  
-  .instruction-icon {
-    transform: scale(0.8);
-  }
-  
-  .floating-badges {
-    bottom: 0.5rem !important;
-    right: 0.5rem !important;
-  }
-  
-  .badge {
-    transform: scale(0.75);
-    padding: 0.5rem !important;
-  }
-}
-
-/* Ensure map background appears correctly */
-.bg-map {
-  background-size: cover;
-  background-position: center;
-  opacity: 0.3;
-}
-
 /* Animation for element appearances */
 @keyframes fadeIn {
   from {
@@ -277,6 +160,7 @@ button:active {
 
 .animate-fade-in {
   animation: fadeIn 0.5s ease-out forwards;
+  opacity: 0; /* Start with opacity 0 to prevent flash */
 }
 
 /* Add staggered delay for animations */
@@ -325,12 +209,12 @@ button:active {
 
 /* Mapbox custom styling */
 .mapboxgl-popup {
-  max-width: 280px !important; /* Smaller for mobile */
+  max-width: 320px !important;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 .mapboxgl-popup-content {
-  padding: 12px;
+  padding: 15px;
   border-radius: 8px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
@@ -339,13 +223,11 @@ button:active {
   font-weight: 700;
   color: var(--ibero-red);
   margin-bottom: 5px;
-  font-size: 1rem;
 }
 
 .mapboxgl-popup-content p {
   margin: 0;
   color: #333;
-  font-size: 0.875rem;
 }
 
 /* Custom marker pulse animation */
@@ -378,7 +260,7 @@ button:active {
 
 /* Custom scrollbar for location list */
 .location-list {
-  max-height: 60vh; /* Use viewport height for better mobile sizing */
+  max-height: 300px;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(200, 16, 46, 0.5) transparent;
@@ -386,7 +268,7 @@ button:active {
 }
 
 .location-list::-webkit-scrollbar {
-  width: 4px;
+  width: 6px;
 }
 
 .location-list::-webkit-scrollbar-track {
@@ -485,10 +367,132 @@ button:active {
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
-/* Landscape orientation specific adjustments */
-@media (max-width: 920px) and (orientation: landscape) {
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 3rem;
+  }
+  
+  .icon-container {
+    flex-direction: column;
+  }
+  
+  .button-container {
+    flex-direction: column;
+  }
+  
+  /* Show mobile menu button, hide regular nav */
+  .mobile-menu-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border: none;
+    border-radius: 50%;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-left: auto;
+  }
+  
+  .desktop-nav {
+    display: none;
+  }
+  
+  /* Adjust badge positioning */
+  .floating-badges {
+    position: fixed !important;
+    bottom: 1rem !important;
+    right: 1rem !important;
+    z-index: 20 !important;
+    flex-direction: row !important;
+    gap: 0.5rem !important;
+    margin-top: 0 !important;
+  }
+  
+  .floating-badges > div {
+    margin-bottom: 0 !important;
+    margin-right: 0.5rem !important;
+  }
+  
+  .badge {
+    transform: scale(0.85);
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(5px);
+  }
+  
+  .campus-silhouette {
+    opacity: 0.05;
+  }
+}
+
+/* Ensure map background appears correctly */
+.bg-map {
+  background-size: cover;
+  background-position: center;
+  opacity: 0.3;
+}
+
+/* Campus map specific styles */
+.smart-campus-map {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Custom marker animations */
+.custom-marker {
+  transition: transform 0.3s;
+}
+
+.custom-marker:hover {
+  transform: scale(1.2);
+  z-index: 10;
+}
+
+/* Animation for location selection */
+.marker-selected {
+  animation: pulse 1.5s infinite;
+}
+
+/* Responsive mobile adjustments */
+@media (max-width: 480px) {
+  header {
+    padding: 0.5rem;
+  }
+  
+  .logo-container {
+    font-size: 0.85rem;
+  }
+  
+  h1 {
+    font-size: 2.25rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  p {
+    font-size: 1rem !important;
+  }
+  
+  .instruction-icon {
+    transform: scale(0.8);
+  }
+  
+  .floating-badges {
+    bottom: 0.5rem !important;
+    right: 0.5rem !important;
+  }
+  
+  .badge {
+    transform: scale(0.75);
+    padding: 0.5rem !important;
+  }
+}
+
+/* For landscape orientation on mobile */
+@media (max-height: 500px) and (orientation: landscape) {
   .main-content {
-    padding-top: 1rem;
+    padding-top: 0.5rem;
   }
   
   h1 {
@@ -497,17 +501,45 @@ button:active {
   }
   
   .instruction-container {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
   }
   
   .floating-badges {
-    top: 1rem !important;
-    right: 1rem !important;
     bottom: auto !important;
+    top: 0.5rem !important;
+    right: 0.5rem !important;
   }
 }
 
-/* Touch-specific improvements */
+/* Button styles for SmartCampusMap */
+.primary-button {
+  background-color: var(--ibero-yellow);
+  color: #333;
+  font-weight: 500;
+  border-radius: 9999px;
+  padding: 0.75rem 2rem;
+  transition: all 0.2s;
+}
+
+.primary-button:hover {
+  background-color: #E6BC00;
+}
+
+.secondary-button {
+  background-color: white;
+  color: #333;
+  font-weight: 500;
+  border-radius: 9999px;
+  padding: 0.75rem 2rem;
+  border: 1px solid #ddd;
+  transition: all 0.2s;
+}
+
+.secondary-button:hover {
+  background-color: #f5f5f5;
+}
+
+/* Ensure touch-friendly interactions */
 @media (hover: none) {
   button:hover {
     transform: none;
@@ -517,9 +549,12 @@ button:active {
     transform: none;
   }
   
-  /* Larger touch targets */
+  .custom-marker:hover {
+    transform: none;
+  }
+  
   .mapboxgl-popup-close-button {
     padding: 8px;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
   }
 }

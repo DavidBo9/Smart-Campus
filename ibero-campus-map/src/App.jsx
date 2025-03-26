@@ -11,7 +11,7 @@ const IberoLogo = () => (
     <div className="text-2xl md:text-3xl font-serif font-bold mr-2">
       <span className="text-red-700">IBERO</span>
     </div>
-    <span className="text-gray-700">Viewbook</span>
+    <span className="text-gray-700">SmartCampus</span>
   </div>
 );
 
@@ -164,10 +164,7 @@ const App = () => {
     // After animation, show the full interactive map
     setTimeout(() => {
       setShowMap(true);
-      // Keep transitioning true for a moment to ensure smooth transition
-      setTimeout(() => {
-        setTransitioning(false);
-      }, 100);
+      setTransitioning(false);
     }, 1500);
   };
 
@@ -192,14 +189,14 @@ const App = () => {
 
   if (showMap) {
     return (
-      <div className={`transition-opacity duration-500 absolute inset-0 z-30 ${transitioning ? 'opacity-0' : 'opacity-100'}`}>
+      <div className={`transition-opacity duration-500 ${transitioning ? 'opacity-0' : 'opacity-100'}`}>
         <SmartCampusMap onBack={handleBackFromMap} isMobile={isMobile} />
       </div>
     );
   }
 
   return (
-    <div className={`relative w-full min-h-screen bg-beige transition-opacity duration-500 ${transitioning ? 'opacity-0' : 'opacity-100'}`}>
+    <div className={`relative w-full min-h-screen bg-beige transition-opacity duration-500 ${transitioning ? 'opacity-0' : 'opacity-100'}`} style={{ overflowY: 'auto' }}>
       {/* Background map */}
       <div 
         ref={mapContainerRef}

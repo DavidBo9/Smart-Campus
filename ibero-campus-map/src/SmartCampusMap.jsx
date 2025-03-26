@@ -2,8 +2,102 @@ import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
+// ==================== STYLES ====================
+const styles = {
+  mapContainer: {
+    position: 'relative',
+    width: '100%',
+    height: '100vh'
+  },
+  sidebar: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    padding: '20px',
+    zIndex: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    maxWidth: '300px',
+  },
+  markerButtons: {
+    position: 'absolute',
+    bottom: '20px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    zIndex: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    padding: '10px',
+    borderRadius: '5px',
+    display: 'flex',
+    gap: '10px'
+  },
+  popup: {
+    maxWidth: '300px',
+    padding: '10px'
+  }
+};
+
+// ==================== CAMPUS DATA ====================
+const campusLocations = [
+  {
+    id: 'library',
+    name: 'Biblioteca',
+    description: 'Centro de recursos y estudio con más de 50,000 volúmenes.',
+    category: 'academic',
+    coordinates: [-98.24259, 19.03156]
+  },
+  {
+    id: 'cafeteria',
+    name: 'Cafetería Central',
+    description: 'Amplia selección de alimentos y bebidas para estudiantes y personal.',
+    category: 'dining',
+    coordinates: [-98.24059, 19.03056]
+  },
+  {
+    id: 'auditorio',
+    name: 'Auditorio Principal',
+    description: 'Espacio para eventos académicos y presentaciones culturales.',
+    category: 'services',
+    coordinates: [-98.24359, 19.03256]
+  },
+  {
+    id: 'sports',
+    name: 'Centro Deportivo',
+    description: 'Instalaciones para actividades físicas y deportivas.',
+    category: 'athletics',
+    coordinates: [-98.23959, 19.02956]
+  },
+  {
+    id: 'admissions',
+    name: 'Oficina de Admisiones',
+    description: 'Información para futuros estudiantes y proceso de inscripción.',
+    category: 'services',
+    coordinates: [-98.24159, 19.03356]
+  },
+  {
+    id: 'artes',
+    name: 'Edificio de Artes',
+    description: 'Espacios para clases de música, pintura y otras disciplinas artísticas.',
+    category: 'academic',
+    coordinates: [-98.24459, 19.03056]
+  },
+  {
+    id: 'parking',
+    name: 'Estacionamiento Principal',
+    description: 'Área de estacionamiento para estudiantes y visitantes.',
+    category: 'services',
+    coordinates: [-98.23859, 19.03156]
+  },
+  {
+    id: 'dormitories',
+    name: 'Residencias Estudiantiles',
+    description: 'Alojamiento para estudiantes foráneos.',
+    category: 'residential',
+    coordinates: [-98.24559, 19.02856]
+  }
+];
+
 // ==================== MAIN COMPONENT ====================
-const SmartCampusMap = ({ onBack, isMobile = window.innerWidth <= 768 }) => {
+const SmartCampusMap = ({ onBack, isMobile }) => {
   // ========== STATE AND REFS ==========
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
@@ -17,78 +111,22 @@ const SmartCampusMap = ({ onBack, isMobile = window.innerWidth <= 768 }) => {
   const [showInstructions, setShowInstructions] = useState(!isMobile);
   const [activeCategory, setActiveCategory] = useState('all');
 
-  // ==================== CAMPUS DATA ====================
-  const campusLocations = [
-    {
-      id: 'library',
-      name: 'Biblioteca',
-      description: 'Centro de recursos y estudio con más de 50,000 volúmenes.',
-      category: 'academic',
-      coordinates: [-98.24259, 19.03156]
-    },
-    {
-      id: 'cafeteria',
-      name: 'Cafetería Central',
-      description: 'Amplia selección de alimentos y bebidas para estudiantes y personal.',
-      category: 'dining',
-      coordinates: [-98.24059, 19.03056]
-    },
-    {
-      id: 'auditorio',
-      name: 'Auditorio Principal',
-      description: 'Espacio para eventos académicos y presentaciones culturales.',
-      category: 'services',
-      coordinates: [-98.24359, 19.03256]
-    },
-    {
-      id: 'sports',
-      name: 'Centro Deportivo',
-      description: 'Instalaciones para actividades físicas y deportivas.',
-      category: 'athletics',
-      coordinates: [-98.23959, 19.02956]
-    },
-    {
-      id: 'admissions',
-      name: 'Oficina de Admisiones',
-      description: 'Información para futuros estudiantes y proceso de inscripción.',
-      category: 'services',
-      coordinates: [-98.24159, 19.03356]
-    },
-    {
-      id: 'artes',
-      name: 'Edificio de Artes',
-      description: 'Espacios para clases de música, pintura y otras disciplinas artísticas.',
-      category: 'academic',
-      coordinates: [-98.24459, 19.03056]
-    },
-    {
-      id: 'parking',
-      name: 'Estacionamiento Principal',
-      description: 'Área de estacionamiento para estudiantes y visitantes.',
-      category: 'services',
-      coordinates: [-98.23859, 19.03156]
-    },
-    {
-      id: 'dormitories',
-      name: 'Residencias Estudiantiles',
-      description: 'Alojamiento para estudiantes foráneos.',
-      category: 'residential',
-      coordinates: [-98.24559, 19.02856]
-    }
-  ];
-
   // ========== MARKER FUNCTIONS ==========
   // Helper function to create a custom marker element
   const createMarkerElement = (location) => {
     const markerEl = document.createElement('div');
     markerEl.className = 'custom-marker';
-    markerEl.style.width = isMobile ? '24px' : '30px';
-    markerEl.style.height = isMobile ? '24px' : '30px';
+    markerEl.style.width = '30px';
+    markerEl.style.height = '30px';
     markerEl.style.borderRadius = '50%';
     markerEl.style.cursor = 'pointer';
     markerEl.style.opacity = '0';
     markerEl.style.willChange = 'transform, opacity';
+    
+    // Critical: ensure z-index is high enough to be visible
     markerEl.style.zIndex = '5';
+    
+    // Improve transition properties for smoother animations
     markerEl.style.transition = 'opacity 0.5s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
     
     // Set color based on category - using IBERO red for primary categories
@@ -122,38 +160,37 @@ const SmartCampusMap = ({ onBack, isMobile = window.innerWidth <= 768 }) => {
     innerDot.style.top = '50%';
     innerDot.style.left = '50%';
     innerDot.style.transform = 'translate(-50%, -50%)';
-    innerDot.style.width = isMobile ? '8px' : '10px';
-    innerDot.style.height = isMobile ? '8px' : '10px';
+    innerDot.style.width = '10px';
+    innerDot.style.height = '10px';
     innerDot.style.borderRadius = '50%';
     innerDot.style.backgroundColor = 'white';
-    innerDot.style.transition = 'transform 0.3s ease';
+    innerDot.style.transition = 'transform 0.3s ease'; // Add transition for the inner dot too
     
     markerEl.appendChild(innerDot);
     
     return markerEl;
   };
 
-  // Add markers to the map with staggered animation
+  // Add markers to the map with staggered animation and performance optimizations
   const addMarkers = () => {
     campusLocations.forEach((location, index) => {
       // Create marker element
       const markerEl = createMarkerElement(location);
       
-      // Create popup with responsive sizing and proper offset for mobile
+      // Create popup
       const popup = new mapboxgl.Popup({
-        offset: isMobile ? [0, -15] : 25,  // Different offset for mobile
-        closeButton: true,
+        offset: 25,
+        closeButton: false,
         closeOnClick: true,
-        maxWidth: isMobile ? '240px' : '300px',
-        anchor: isMobile ? 'bottom' : 'bottom',  // Always anchor to bottom on mobile
+        maxWidth: '300px'
       }).setHTML(
         `<div>
-          <h3 style="font-weight: bold; margin-bottom: 5px; font-size: ${isMobile ? '14px' : '16px'};">${location.name}</h3>
-          <p style="font-size: ${isMobile ? '12px' : '14px'};">${location.description}</p>
+          <h3 style="font-weight: bold; margin-bottom: 5px;">${location.name}</h3>
+          <p>${location.description}</p>
         </div>`
       );
       
-      // Create marker and add to map
+      // IMPORTANT FIX: Use the simplest marker creation to ensure custom styling works
       const marker = new mapboxgl.Marker(markerEl)
         .setLngLat(location.coordinates)
         .setPopup(popup)
@@ -166,19 +203,6 @@ const SmartCampusMap = ({ onBack, isMobile = window.innerWidth <= 768 }) => {
       markerEl.addEventListener('click', () => {
         setSelectedLocation(location);
       });
-      
-      // Make sure touch targets are larger on mobile
-      if (isMobile) {
-        markerEl.addEventListener('touchstart', () => {
-          markerEl.style.transform = 'scale(1.1)';
-        });
-        
-        markerEl.addEventListener('touchend', () => {
-          setTimeout(() => {
-            markerEl.style.transform = 'scale(1)';
-          }, 150);
-        });
-      }
       
       // Animate markers entrance with staggered delay
       setTimeout(() => {
@@ -224,64 +248,58 @@ const SmartCampusMap = ({ onBack, isMobile = window.innerWidth <= 768 }) => {
       const campusCenter = [-98.24159, 19.03056]; // IBERO Puebla coordinates
       
       // Define bounds constraints (approximately 1km around campus center)
+      // These values create a bounding box around the campus
       const maxBounds = [
         [campusCenter[0] - 0.008, campusCenter[1] - 0.008], // Southwest coordinates
         [campusCenter[0] + 0.008, campusCenter[1] + 0.008]  // Northeast coordinates
       ];
       
-      // Create the map instance with optimizations and mobile adaptations
+      // Create the map instance with performance optimizations and constraints
       const map = new mapboxgl.Map({
         container: mapContainerRef.current,
         style: 'mapbox://styles/mapbox/light-v11',
         center: campusCenter,
-        zoom: isMobile ? 15.5 : 16, // Slightly zoomed out for mobile
-        pitch: isMobile ? 30 : 45, // Less pitch on mobile for better viewing
+        zoom: 16,
+        pitch: 45,
         bearing: -17.6,
         antialias: true,
-        fadeDuration: 1000,
-        renderWorldCopies: false,
-        maxPitch: isMobile ? 50 : 60,
-        attributionControl: false,
-        preserveDrawingBuffer: false,
-        minZoom: 15,
-        maxZoom: 18,
+        fadeDuration: 1000, // Smooth transitions
+        renderWorldCopies: false, // Improves performance by not rendering multiple world copies
+        maxPitch: 60, // Limit pitch to improve performance
+        attributionControl: false, // Remove attribution for cleaner UI
+        preserveDrawingBuffer: false, // Improve performance
+        
+        // Set zoom constraints
+        minZoom: 15, // Prevent zooming out too far
+        maxZoom: 18, // Prevent zooming in too far
+        
+        // Set maximum bounds to restrict panning
         maxBounds: maxBounds
       });
       
       // Save the map reference
       mapRef.current = map;
       
-      // Add navigation controls (smaller on mobile)
-      map.addControl(new mapboxgl.NavigationControl({
-        showCompass: !isMobile, // Hide compass on mobile
-        showZoom: true,
-        visualizePitch: !isMobile // Hide pitch visualization on mobile
-      }));
+      // Add navigation controls
+      map.addControl(new mapboxgl.NavigationControl());
       
-      // Add geolocate control for mobile users
-      if (isMobile) {
-        map.addControl(new mapboxgl.GeolocateControl({
-          positionOptions: {
-            enableHighAccuracy: true
-          },
-          trackUserLocation: true
-        }));
-      }
-      
-      // Add optimization events
+      // Add optimization and anti-jitter events
       map.on('movestart', () => {
+        // When map starts moving, apply CSS to reduce jitter
         if (mapContainerRef.current) {
           mapContainerRef.current.style.willChange = 'transform';
         }
         
+        // Temporarily reduce marker animation complexity during movement
         Object.values(markersRef.current).forEach(marker => {
           const markerEl = marker.getElement();
-          markerEl.style.transition = 'none';
-          markerEl.style.willChange = 'transform';
+          markerEl.style.transition = 'none'; // Disable transitions during movement
+          markerEl.style.willChange = 'transform'; // Optimize for GPU
         });
       });
       
       map.on('moveend', () => {
+        // Restore marker animations after movement
         if (mapContainerRef.current) {
           mapContainerRef.current.style.willChange = 'auto';
         }
@@ -292,7 +310,7 @@ const SmartCampusMap = ({ onBack, isMobile = window.innerWidth <= 768 }) => {
             markerEl.style.transition = 'opacity 0.5s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
             markerEl.style.willChange = 'auto';
           });
-        }, 100);
+        }, 100); // Small delay to ensure smooth completion
       });
       
       // When map loads, add buildings and markers
@@ -300,7 +318,7 @@ const SmartCampusMap = ({ onBack, isMobile = window.innerWidth <= 768 }) => {
         console.log('Map loaded successfully');
         setMapLoaded(true);
         
-        // Add 3D buildings
+        // Add 3D buildings with optimized rendering
         const layers = map.getStyle().layers;
         const labelLayerId = layers.find(
           (layer) => layer.type === 'symbol' && layer.layout['text-field']
@@ -354,73 +372,48 @@ const SmartCampusMap = ({ onBack, isMobile = window.innerWidth <= 768 }) => {
         }, 1000);
       });
       
-      // Optimize rendering on mobile
-      if (isMobile) {
-        map.on('render', () => {
-          if (!map.isMoving() && !map.isZooming() && !map.isRotating()) {
-            // Reduce render frequency when not moving
-            map.stop();
-          }
-        });
-      }
-      
-      // Handle orientation changes
-      const handleOrientationChange = () => {
-        setTimeout(() => {
-          if (mapRef.current) {
-            mapRef.current.resize();
-          }
-        }, 200);
-      };
-      
-      window.addEventListener('orientationchange', handleOrientationChange);
-      
       // Cleanup function
       return () => {
-        window.removeEventListener('orientationchange', handleOrientationChange);
         if (mapRef.current) {
           mapRef.current.remove();
         }
       };
     }
-  }, [isMobile]);
+  }, []);
 
   // ========== LOCATION SELECTION ==========
+  // Completely reworked implementation to fix popup positioning issue
   useEffect(() => {
     if (selectedLocation && mapRef.current) {
-      // Reset all markers
+      // First, close any open popups
       Object.values(markersRef.current).forEach(marker => {
+        // Remove any existing popups
         if (marker.getPopup() && marker.getPopup().isOpen()) {
           marker.togglePopup();
         }
         
+        // Reset marker appearance
         const markerEl = marker.getElement();
         markerEl.style.transform = 'scale(1)';
         markerEl.style.zIndex = '5';
         markerEl.style.boxShadow = '0 0 0 2px white';
         markerEl.classList.remove('marker-selected');
-        markerEl.style.opacity = '0.7';
+        markerEl.style.opacity = '0.7'; // Dim all markers
       });
       
       // Get the selected marker
       const selectedMarker = markersRef.current[selectedLocation.id];
       if (!selectedMarker) return;
       
-      // On mobile, auto-hide panels for better map visibility
-      if (isMobile) {
-        setShowLocationList(false);
-        setShowFilters(false);
-        setShowInstructions(false);
-      }
-      
-      // Move map to center on the location
+      // First move the map to center on the location
       mapRef.current.flyTo({
         center: selectedLocation.coordinates,
-        zoom: isMobile ? 16.5 : 17,
-        duration: 500,
+        zoom: 17,
+        duration: 500, 
         essential: true
       });
       
+      // Then handle what happens after the movement ends
       const moveEndHandler = () => {
         // Restore all markers appearance
         Object.values(markersRef.current).forEach(marker => {
@@ -432,46 +425,48 @@ const SmartCampusMap = ({ onBack, isMobile = window.innerWidth <= 768 }) => {
         const selectedMarkerEl = selectedMarker.getElement();
         selectedMarkerEl.style.transform = 'scale(1.2)';
         selectedMarkerEl.style.zIndex = '10';
-        selectedMarkerEl.style.boxShadow = '0 0 0 2px #C8102E';
+        selectedMarkerEl.style.boxShadow = '0 0 0 2px #C8102E'; // IBERO Red
         selectedMarkerEl.classList.add('marker-selected');
         
-        // Create and set a new popup
+        // CRITICAL FIX: Instead of using togglePopup, create and set a new popup
+        // This ensures proper positioning relative to the marker
         const popup = new mapboxgl.Popup({
-          offset: isMobile ? [0, -15] : 25,
-          closeButton: true,
-          closeOnClick: true,
-          maxWidth: isMobile ? '220px' : '300px',
-          className: 'custom-popup',
-          anchor: isMobile ? 'bottom' : 'bottom',  // Force bottom anchor on mobile
-          focusAfterOpen: false  // Prevent keyboard from opening on mobile
+          offset: 25,
+          closeButton: false,
+          closeOnClick: true
         }).setHTML(
           `<div>
-            <h3 style="font-weight: bold; margin-bottom: 5px; font-size: ${isMobile ? '14px' : '16px'};">${selectedLocation.name}</h3>
-            <p style="font-size: ${isMobile ? '12px' : '14px'};">${selectedLocation.description}</p>
+            <h3 style="font-weight: bold; margin-bottom: 5px;">${selectedLocation.name}</h3>
+            <p>${selectedLocation.description}</p>
           </div>`
         );
         
+        // Set and open the popup directly on the marker
         selectedMarker.setPopup(popup);
         
+        // Short delay to ensure proper positioning
         setTimeout(() => {
           selectedMarker.togglePopup();
         }, 50);
         
+        // Remove this event listener
         mapRef.current.off('moveend', moveEndHandler);
       };
       
+      // Listen for the end of map movement
       mapRef.current.on('moveend', moveEndHandler);
     }
-  }, [selectedLocation, isMobile]);
+  }, [selectedLocation]);
 
   // Handle back button click with animation
   const handleBack = () => {
+    // Start fade out animation
     setAreControlsVisible(false);
     setTimeout(() => {
       setIsMapVisible(false);
       setTimeout(() => {
         onBack();
-      }, 500);
+      }, 500); // Wait for fade out animation to complete
     }, 300);
   };
 
@@ -481,17 +476,17 @@ const SmartCampusMap = ({ onBack, isMobile = window.innerWidth <= 768 }) => {
       {/* Map Container with fade-in animation */}
       <div 
         ref={mapContainerRef} 
-        className="map-container"
         style={{
+          ...styles.mapContainer,
           opacity: isMapVisible ? 1 : 0,
           transition: 'opacity 1s ease-in-out'
         }} 
       />
       
-      {/* Back Button - Always visible */}
+      {/* Back Button */}
       <button 
         onClick={handleBack} 
-        className={`back-button ${areControlsVisible ? 'visible' : 'hidden'}`}
+        className={`absolute top-4 left-4 z-10 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition-all cursor-pointer duration-300 ${areControlsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}
         aria-label="Volver"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -499,225 +494,112 @@ const SmartCampusMap = ({ onBack, isMobile = window.innerWidth <= 768 }) => {
         </svg>
       </button>
       
-      {/* Header - Always visible but responsive */}
-      <div className={`map-header ${areControlsVisible ? 'visible' : 'hidden'}`}>
-        <div className="logo-container">
-          <h1 className="text-red-700">IBERO</h1>
-          <span>Puebla</span>
+      {/* Header with fade-in and slide-down animation */}
+      <div className={`absolute top-4 left-16 bg-white bg-opacity-90 p-4 rounded shadow-md z-10 max-w-md transition-all duration-500 ${areControlsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'}`}>
+        <div className="flex items-center mb-2">
+          <h1 className="text-3xl font-bold mr-2 text-red-700">IBERO</h1>
+          <span className="text-lg">Puebla</span>
         </div>
-        <h2>Explora Smart Campus</h2>
-        {!isMobile && (
-          <p className="header-description">
-            Conoce nuestros diferentes sensores ubicados en diferentes partes del campus.
-          </p>
-        )}
+        <h2 className="text-4xl font-bold mb-2">Explora Smart Campus</h2>
+        <p className="text-gray-700">
+          Conoce nuestros diferentes sensores ubicados en diferentes partes del campus.
+        </p>
       </div>
       
-      {/* Mobile Control Center - only on mobile */}
-      {isMobile && areControlsVisible && (
-        <div className="mobile-control-center">
+      {/* Location List with fade-in and slide-up animation */}
+      <div className={`absolute bottom-6 right-4 bg-white bg-opacity-90 p-4 rounded shadow-md z-10 max-w-xs transition-all duration-500 delay-300 ${areControlsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+        <h3 className="text-lg font-bold mb-2">Lugares del Campus</h3>
+        <ul className="space-y-1">
+          {campusLocations.map((location) => (
+            <li 
+              key={location.id}
+              className="p-2 hover:bg-gray-100 rounded cursor-pointer flex items-center"
+              onClick={() => setSelectedLocation(location)}
+            >
+              <div 
+                className="w-3 h-3 rounded-full mr-2"
+                style={{
+                  backgroundColor: 
+                    location.category === 'academic' ? '#C8102E' :
+                    location.category === 'dining' ? '#FFC72C' :
+                    location.category === 'services' ? '#0078D4' :
+                    location.category === 'athletics' ? '#107C10' :
+                    location.category === 'residential' ? '#5C2D91' : '#C8102E'
+                }}
+              />
+              {location.name}
+            </li>
+          ))}
+        </ul>
+      </div>
+      
+      {/* Category Filter with fade-in and slide-up animation */}
+      <div className={`absolute bottom-6 left-4 bg-white bg-opacity-90 p-4 rounded shadow-md z-10 transition-all duration-500 delay-400 ${areControlsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+        <h3 className="text-sm font-bold mb-2">Filtrar por categoría:</h3>
+        <div className="flex flex-wrap gap-2">
           <button 
-            className={`control-button ${showLocationList ? 'active' : ''}`}
-            onClick={() => setShowLocationList(!showLocationList)}
+            className="px-3 py-1 bg-gray-500 hover:bg-gray-300 rounded text-sm transition-colors duration-200"
+            onClick={() => filterMarkers('all')}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M5 4a3 3 0 00-3 3v6a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3H5zm-1 9v-1h5v2H5a1 1 0 01-1-1zm7 1h4a1 1 0 001-1v-1h-5v2zm0-4h5V8h-5v2zM9 8H4v2h5V8z" clipRule="evenodd" />
-            </svg>
-            Lugares
+            Todos
           </button>
-          
           <button 
-            className={`control-button ${showFilters ? 'active' : ''}`}
-            onClick={() => setShowFilters(!showFilters)}
+            className="px-3 py-1 bg-red-600 hover:bg-red-200 rounded text-sm transition-colors duration-200"
+            onClick={() => filterMarkers('academic')}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clipRule="evenodd" />
-            </svg>
-            Filtros
+            Académico
           </button>
-          
           <button 
-            className={`control-button ${showInstructions ? 'active' : ''}`}
-            onClick={() => setShowInstructions(!showInstructions)}
+            className="px-3 py-1 bg-orange-400 hover:bg-orange-200 rounded text-sm transition-colors duration-200"
+            onClick={() => filterMarkers('dining')}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-            </svg>
-            Info
+            Comedor
           </button>
-          
           <button 
-            className="control-button"
-            onClick={() => {
-              if (mapRef.current) {
-                mapRef.current.flyTo({
-                  center: [-98.24159, 19.03056],
-                  zoom: isMobile ? 15.5 : 16,
-                  pitch: isMobile ? 30 : 45,
-                  bearing: -17.6,
-                  duration: 1000
-                });
-                setSelectedLocation(null);
-              }
-            }}
+            className="px-3 py-1 bg-blue-600 hover:bg-blue-200 rounded text-sm transition-colors duration-200"
+            onClick={() => filterMarkers('services')}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-            </svg>
-            Centro
+            Servicios
+          </button>
+          <button 
+            className="px-3 py-1 bg-green-600 hover:bg-green-200 rounded text-sm transition-colors duration-200"
+            onClick={() => filterMarkers('athletics')}
+          >
+            Deportes
+          </button>
+          <button 
+            className="px-3 py-1 bg-purple-600 hover:bg-purple-200 rounded text-sm transition-colors duration-200"
+            onClick={() => filterMarkers('residential')}
+          >
+            Residencias
           </button>
         </div>
-      )}
+      </div>
       
-      {/* Location List - Collapsible on mobile */}
-      {showLocationList && (
-        <div className={`location-panel ${areControlsVisible ? 'visible' : 'hidden'}`}>
-          <div className="panel-header">
-            <h3>Lugares del Campus</h3>
-            {isMobile && (
-              <button 
-                className="close-panel"
-                onClick={() => setShowLocationList(false)}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </button>
-            )}
+      {/* Instructions with fade-in animation */}
+      <div className={`absolute top-4 right-4 bg-white bg-opacity-90 p-4 rounded shadow-md z-10 transition-all duration-500 delay-200 ${areControlsVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
+        <div className="flex items-center mb-2">
+          <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mr-2">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />
+            </svg>
           </div>
-          <ul className="location-list">
-            {campusLocations.map((location) => (
-              <li 
-                key={location.id}
-                className={`location-item ${selectedLocation?.id === location.id ? 'selected' : ''}`}
-                onClick={() => setSelectedLocation(location)}
-              >
-                <div 
-                  className="location-color-dot"
-                  style={{
-                    backgroundColor: 
-                      location.category === 'academic' ? '#C8102E' :
-                      location.category === 'dining' ? '#FFC72C' :
-                      location.category === 'services' ? '#0078D4' :
-                      location.category === 'athletics' ? '#107C10' :
-                      location.category === 'residential' ? '#5C2D91' : '#C8102E'
-                  }}
-                />
-                <span className="location-name">{location.name}</span>
-              </li>
-            ))}
-          </ul>
+          <span>Arrastrar para mover</span>
         </div>
-      )}
-      
-      {/* Category Filter - Collapsible on mobile */}
-      {showFilters && (
-        <div className={`filters-panel ${areControlsVisible ? 'visible' : 'hidden'}`}>
-          <div className="panel-header">
-            <h3>Filtrar por categoría</h3>
-            {isMobile && (
-              <button 
-                className="close-panel"
-                onClick={() => setShowFilters(false)}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </button>
-            )}
+        <div className="flex items-center">
+          <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mr-2">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M6.672 1.911a1 1 0 10-1.932.518l.259.966a1 1 0 001.932-.518l-.26-.966zM2.429 4.74a1 1 0 10-.517 1.932l.966.259a1 1 0 00.517-1.932l-.966-.26zm8.814-.569a1 1 0 00-1.415-1.414l-.707.707a1 1 0 101.415 1.415l.707-.708zm-7.071 7.072l.707-.707A1 1 0 003.465 9.12l-.708.707a1 1 0 001.415 1.415zm3.2-5.171a1 1 0 00-1.3 1.3l4 10a1 1 0 001.823.075l1.38-2.759 3.018 3.02a1 1 0 001.414-1.415l-3.019-3.02 2.76-1.379a1 1 0 00-.076-1.822l-10-4z" clipRule="evenodd" />
+            </svg>
           </div>
-          <div className="filter-buttons">
-            <button 
-              className={`filter-button all ${activeCategory === 'all' ? 'active' : ''}`}
-              onClick={() => filterMarkers('all')}
-            >
-              Todos
-            </button>
-            <button 
-              className={`filter-button academic ${activeCategory === 'academic' ? 'active' : ''}`}
-              onClick={() => filterMarkers('academic')}
-            >
-              Académico
-            </button>
-            <button 
-              className={`filter-button dining ${activeCategory === 'dining' ? 'active' : ''}`}
-              onClick={() => filterMarkers('dining')}
-            >
-              Comedor
-            </button>
-            <button 
-              className={`filter-button services ${activeCategory === 'services' ? 'active' : ''}`}
-              onClick={() => filterMarkers('services')}
-            >
-              Servicios
-            </button>
-            <button 
-              className={`filter-button athletics ${activeCategory === 'athletics' ? 'active' : ''}`}
-              onClick={() => filterMarkers('athletics')}
-            >
-              Deportes
-            </button>
-            <button 
-              className={`filter-button residential ${activeCategory === 'residential' ? 'active' : ''}`}
-              onClick={() => filterMarkers('residential')}
-            >
-              Residencias
-            </button>
-          </div>
+          <span>Clic para información</span>
         </div>
-      )}
+      </div>
       
-      {/* Instructions panel - Collapsible on mobile */}
-      {showInstructions && (
-        <div className={`instructions-panel ${areControlsVisible ? 'visible' : 'hidden'}`}>
-          <div className="panel-header">
-            <h3>Cómo usar el mapa</h3>
-            {isMobile && (
-              <button 
-                className="close-panel"
-                onClick={() => setShowInstructions(false)}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </button>
-            )}
-          </div>
-          <div className="instruction-items">
-            <div className="instruction-item">
-              <div className="instruction-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <span>Arrastrar para mover</span>
-            </div>
-            <div className="instruction-item">
-              <div className="instruction-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M6.672 1.911a1 1 0 10-1.932.518l.259.966a1 1 0 001.932-.518l-.26-.966zM2.429 4.74a1 1 0 10-.517 1.932l.966.259a1 1 0 00.517-1.932l-.966-.26zm8.814-.569a1 1 0 00-1.415-1.414l-.707.707a1 1 0 101.415 1.415l.707-.708zm-7.071 7.072l.707-.707A1 1 0 003.465 9.12l-.708.707a1 1 0 001.415 1.415zm3.2-5.171a1 1 0 00-1.3 1.3l4 10a1 1 0 001.823.075l1.38-2.759 3.018 3.02a1 1 0 001.414-1.415l-3.019-3.02 2.76-1.379a1 1 0 00-.076-1.822l-10-4z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <span>Clic para información</span>
-            </div>
-            {isMobile && (
-              <div className="instruction-item">
-                <div className="instruction-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm1 5a1 1 0 100 2h12a1 1 0 100-2H4z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <span>Usa los botones abajo para controlar el mapa</span>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-      
-      {/* Return to center button - only on desktop */}
-      {!isMobile && areControlsVisible && (
+      {/* Mobile view controls with fade-in animation */}
+      <div className={`absolute bottom-24 left-1/2 transform -translate-x-1/2 z-10 md:hidden transition-all duration-500 delay-500 ${areControlsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
         <button 
-          className="center-button"
+          className="px-4 py-2 bg-red-700 text-white rounded-full shadow-lg transition-transform duration-200 hover:scale-105"
           onClick={() => {
             if (mapRef.current) {
               mapRef.current.flyTo({
@@ -727,13 +609,12 @@ const SmartCampusMap = ({ onBack, isMobile = window.innerWidth <= 768 }) => {
                 bearing: -17.6,
                 duration: 1000
               });
-              setSelectedLocation(null);
             }
           }}
         >
           Vista general
         </button>
-      )}
+      </div>
     </div>
   );
 };
