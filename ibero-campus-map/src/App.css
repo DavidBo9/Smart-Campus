@@ -12,6 +12,7 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent; /* Removes tap highlight on mobile */
 }
 
 /* Background beige color */
@@ -27,6 +28,17 @@ body {
 /* Header nav bar */
 header {
   position: relative;
+  width: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* Header content wrapper */
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
 /* Yellow buttons */
@@ -45,6 +57,7 @@ header {
 
 h1 {
   letter-spacing: -0.025em;
+  font-size: clamp(2.5rem, 8vw, 8rem); /* Responsive font size */
 }
 
 /* Dashed circle around icons */
@@ -56,10 +69,15 @@ h1 {
 /* Button hover effects */
 button {
   transition: all 0.2s ease;
+  touch-action: manipulation; /* Improves touch response */
 }
 
 button:hover {
   transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(1px); /* Better tactile feedback on mobile */
 }
 
 /* Map container styling */
@@ -69,18 +87,171 @@ button:hover {
   position: relative;
 }
 
+/* Mobile menu button - visible only on small screens */
+.mobile-menu-button {
+  display: none;
+}
+
+/* Mobile navigation - full screen overlay */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--ibero-white);
+  z-index: 50;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.mobile-nav.open {
+  display: flex;
+}
+
+.mobile-nav-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  color: var(--ibero-red);
+}
+
+.mobile-nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: center;
+}
+
+.mobile-nav-links a {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #333;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+}
+
 /* Mobile responsiveness */
 @media (max-width: 768px) {
+  /* Header adjustments */
+  header {
+    padding: 0.75rem;
+  }
+  
+  /* Show mobile menu button, hide regular nav */
+  .mobile-menu-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border: none;
+    border-radius: 50%;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-left: auto;
+  }
+  
+  .desktop-nav {
+    display: none;
+  }
+  
+  /* Main content adjustments */
   h1 {
-    font-size: 3rem;
+    font-size: clamp(2.5rem, 10vw, 3.5rem);
+    margin-bottom: 1rem;
   }
   
   .icon-container {
     flex-direction: column;
+    gap: 1.5rem;
   }
   
   .button-container {
     flex-direction: column;
+    width: 100%;
+  }
+  
+  .button-container button {
+    width: 100%;
+    margin-bottom: 0.75rem;
+    padding: 0.75rem 1rem;
+    text-align: center;
+    justify-content: center;
+  }
+  
+  /* Adjust icon containers for mobile */
+  .instruction-container {
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .instruction-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+  
+  /* Adjust badge positioning */
+  .floating-badges {
+    position: fixed !important;
+    bottom: 1rem !important;
+    right: 1rem !important;
+    z-index: 20 !important;
+    flex-direction: row !important;
+    gap: 0.5rem !important;
+    margin-top: 0 !important;
+  }
+  
+  .floating-badges > div {
+    margin-bottom: 0 !important;
+    margin-right: 0.5rem !important;
+  }
+  
+  .badge {
+    transform: scale(0.85);
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(5px);
+  }
+}
+
+/* Smaller mobile devices */
+@media (max-width: 480px) {
+  header {
+    padding: 0.5rem;
+  }
+  
+  .logo-container {
+    font-size: 0.85rem;
+  }
+  
+  h1 {
+    font-size: 2.25rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  p {
+    font-size: 1rem !important;
+  }
+  
+  .instruction-icon {
+    transform: scale(0.8);
+  }
+  
+  .floating-badges {
+    bottom: 0.5rem !important;
+    right: 0.5rem !important;
+  }
+  
+  .badge {
+    transform: scale(0.75);
+    padding: 0.5rem !important;
   }
 }
 
@@ -153,12 +324,12 @@ button:hover {
 
 /* Mapbox custom styling */
 .mapboxgl-popup {
-  max-width: 320px !important;
+  max-width: 280px !important; /* Smaller for mobile */
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 .mapboxgl-popup-content {
-  padding: 15px;
+  padding: 12px;
   border-radius: 8px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
@@ -167,11 +338,13 @@ button:hover {
   font-weight: 700;
   color: var(--ibero-red);
   margin-bottom: 5px;
+  font-size: 1rem;
 }
 
 .mapboxgl-popup-content p {
   margin: 0;
   color: #333;
+  font-size: 0.875rem;
 }
 
 /* Custom marker pulse animation */
@@ -204,14 +377,15 @@ button:hover {
 
 /* Custom scrollbar for location list */
 .location-list {
-  max-height: 300px;
+  max-height: 60vh; /* Use viewport height for better mobile sizing */
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(200, 16, 46, 0.5) transparent;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
 .location-list::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
 }
 
 .location-list::-webkit-scrollbar-track {
@@ -310,43 +484,41 @@ button:hover {
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
-/* Responsive positioning adjustments */
-@media (max-width: 768px) {
-  .campus-silhouette {
-    opacity: 0.05;
+/* Landscape orientation specific adjustments */
+@media (max-width: 920px) and (orientation: landscape) {
+  .main-content {
+    padding-top: 1rem;
+  }
+  
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .instruction-container {
+    margin-bottom: 1rem;
   }
   
   .floating-badges {
-    position: fixed !important;
-    right: 10px !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
+    top: 1rem !important;
+    right: 1rem !important;
     bottom: auto !important;
-    z-index: 20 !important;
-    width: auto !important;
-    max-width: 180px !important;
+  }
+}
+
+/* Touch-specific improvements */
+@media (hover: none) {
+  button:hover {
+    transform: none;
   }
   
-  .badge {
-    background-color: rgba(255, 255, 255, 0.95) !important;
-    backdrop-filter: blur(5px);
+  .badge:hover {
+    transform: none;
   }
   
-  /* Make sure badges don't overlap with action buttons on mobile */
-  @media (max-height: 600px) {
-    .floating-badges {
-      top: 120px !important;
-      transform: none !important;
-    }
-  }
-  
-  .campus-points {
-    display: none;
-  }
-  
-  /* Ensure badges are visible and not cut off */
-  .badge {
-    margin-bottom: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  /* Larger touch targets */
+  .mapboxgl-popup-close-button {
+    padding: 8px;
+    font-size: 1.5rem;
   }
 }
