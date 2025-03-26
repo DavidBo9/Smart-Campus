@@ -2,7 +2,7 @@
 :root {
   --ibero-red: #C8102E;
   --ibero-dark-red: #9A0C23;
-  --ibero-white: hsl(40, 20%, 91%);
+  --ibero-white: hsla(40, 20%, 91%, 0.4);
   --ibero-lightred: #ff5151;
 }
 
@@ -13,11 +13,7 @@ body {
   padding: 0;
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent; /* Removes tap highlight on mobile */
-}
-
-/* Background beige color */
-.bg-beige {
-  background-color: var(--ibero-white);
+  background-color: transparent;
 }
 
 /* IBERO logo styling */
@@ -25,12 +21,18 @@ body {
   color: var(--ibero-red);
 }
 
-/* Header nav bar */
+/* Header nav bar - glass effect */
 header {
   position: relative;
   width: 100%;
-  padding: 1rem;
+  padding: 0.75rem 1rem;
   box-sizing: border-box;
+  height: auto;
+  min-height: 60px;
+  background-color: transparent;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 20;
 }
 
 /* Header content wrapper */
@@ -41,13 +43,42 @@ header {
   width: 100%;
 }
 
-/* Yellow buttons */
-.bg-yellow-400 {
-  background-color: var(--ibero-lightred);
+/* Logo container styling */
+.logo-container {
+  display: flex;
+  align-items: center;
 }
 
-.bg-yellow-500 {
-  background-color: #474640;
+.logo-container span.text-red-700 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Desktop navigation */
+.desktop-nav {
+  background-color: var(--ibero-lightred) !important;
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.desktop-nav a {
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.desktop-nav a:hover {
+  color: white !important;
+}
+
+.desktop-nav button {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s;
+}
+
+.desktop-nav button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Typography adjustments */
@@ -57,27 +88,88 @@ header {
 
 h1 {
   letter-spacing: -0.025em;
-  font-size: clamp(2.5rem, 8vw, 8rem); /* Responsive font size */
+  font-size: clamp(2rem, 6vw, 6rem); /* Reduced responsive font size */
+  margin-bottom: 0.75rem;
+  color: #333;
 }
 
-/* Dashed circle around icons */
-.border-dashed {
-  border-style: dashed;
-  border-width: 2px;
+/* Main content layout improvements */
+.main-content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+  position: relative;
+  z-index: 10;
 }
 
-/* Button hover effects */
-button {
-  transition: all 0.2s ease;
-  touch-action: manipulation; /* Improves touch response */
+/* Center content vertically and horizontally */
+.min-h-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-button:hover {
-  transform: translateY(-1px);
+/* Instruction styles */
+.instruction-container {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
 }
 
-button:active {
-  transform: translateY(1px); /* Better tactile feedback on mobile */
+.instruction-icon {
+  width: 3rem !important;
+  height: 3rem !important;
+  border: 2px dashed rgba(100, 100, 100, 0.4);
+  background-color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.instruction-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.instruction-item p {
+  margin: 0;
+}
+
+.instruction-item p:first-child {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+/* Button styling improvements */
+.button-container {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.button-container button {
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s;
+  border: none;
+}
+
+.button-container button:first-child {
+  background-color: var(--ibero-lightred);
+}
+
+.button-container button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.button-container button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 /* Map container styling */
@@ -85,6 +177,14 @@ button:active {
   width: 100%;
   height: 100vh;
   position: relative;
+}
+
+/* Map background styling */
+.map-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.7;
 }
 
 /* Mobile menu button - visible only on small screens */
@@ -100,7 +200,9 @@ button:active {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--ibero-white);
+  background-color: rgba(244, 241, 234, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   z-index: 50;
   flex-direction: column;
   justify-content: center;
@@ -135,6 +237,63 @@ button:active {
   color: #333;
   text-decoration: none;
   padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.mobile-nav-links a:hover {
+  background-color: rgba(200, 16, 46, 0.1);
+}
+
+/* Floating badges styling */
+.floating-badges {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.badge {
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all 0.2s;
+}
+
+.badge:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.badge .icon-circle {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.badge a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 600;
+}
+
+.badge p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #666;
 }
 
 /* Mobile responsiveness */
@@ -155,6 +314,7 @@ button:active {
     width: 2.5rem;
     height: 2.5rem;
     margin-left: auto;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
   
   .desktop-nav {
@@ -163,13 +323,8 @@ button:active {
   
   /* Main content adjustments */
   h1 {
-    font-size: clamp(2.5rem, 10vw, 3.5rem);
-    margin-bottom: 1rem;
-  }
-  
-  .icon-container {
-    flex-direction: column;
-    gap: 1.5rem;
+    font-size: clamp(2rem, 8vw, 3rem);
+    margin-bottom: 0.75rem;
   }
   
   .button-container {
@@ -188,14 +343,14 @@ button:active {
   /* Adjust icon containers for mobile */
   .instruction-container {
     flex-direction: column;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
   }
   
   .instruction-item {
     display: flex;
     align-items: flex-start;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
   }
   
   /* Adjust badge positioning */
@@ -232,12 +387,12 @@ button:active {
   }
   
   h1 {
-    font-size: 2.25rem;
-    margin-bottom: 0.75rem;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
   }
   
   p {
-    font-size: 1rem !important;
+    font-size: 0.875rem !important;
   }
   
   .instruction-icon {
@@ -255,11 +410,94 @@ button:active {
   }
 }
 
-/* Ensure map background appears correctly */
-.bg-map {
-  background-size: cover;
-  background-position: center;
-  opacity: 0.3;
+/* Medium screen sizes - fix for the screenshot issue */
+@media (min-width: 600px) and (max-width: 1024px) {
+  .main-content {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+  
+  h1 {
+    font-size: 2.5rem;
+  }
+  
+  .instruction-container {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .button-container {
+    margin-top: 1.5rem;
+  }
+  
+  .floating-badges {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+  }
+}
+
+/* Vertical height responsiveness */
+@media (max-height: 700px) {
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem) !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  p {
+    font-size: 1rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .instruction-container {
+    margin-bottom: 0.75rem !important;
+  }
+  
+  .button-container {
+    margin-top: 0.5rem !important;
+  }
+  
+  .instruction-icon {
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+  }
+}
+
+/* Allow scrolling on extremely small screens */
+@media (max-height: 550px) {
+  body {
+    overflow-y: auto !important;
+  }
+  
+  .main-content {
+    padding-bottom: 5rem !important;
+  }
+  
+  .floating-badges {
+    position: fixed !important;
+  }
+}
+
+/* Landscape orientation specific adjustments */
+@media (max-width: 920px) and (orientation: landscape) {
+  .main-content {
+    padding-top: 0.5rem;
+  }
+  
+  h1 {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .instruction-container {
+    margin-bottom: 0.75rem;
+  }
+  
+  .floating-badges {
+    top: 1rem !important;
+    right: 1rem !important;
+    bottom: auto !important;
+  }
 }
 
 /* Animation for element appearances */
@@ -322,127 +560,16 @@ button:active {
   transition-duration: 1000ms;
 }
 
-/* Mapbox custom styling */
-.mapboxgl-popup {
-  max-width: 280px !important; /* Smaller for mobile */
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-}
-
-.mapboxgl-popup-content {
-  padding: 12px;
-  border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-.mapboxgl-popup-content h3 {
-  font-weight: 700;
-  color: var(--ibero-red);
-  margin-bottom: 5px;
-  font-size: 1rem;
-}
-
-.mapboxgl-popup-content p {
-  margin: 0;
-  color: #333;
-  font-size: 0.875rem;
-}
-
-/* Custom marker pulse animation */
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(200, 16, 46, 0.4);
-  }
-  70% {
-    transform: scale(1.1);
-    box-shadow: 0 0 0 10px rgba(200, 16, 46, 0);
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(200, 16, 46, 0);
-  }
-}
-
-.marker-pulse {
-  animation: pulse 2s infinite;
-}
-
-/* Cards and UI elements */
-.card {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-}
-
-/* Custom scrollbar for location list */
-.location-list {
-  max-height: 60vh; /* Use viewport height for better mobile sizing */
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(200, 16, 46, 0.5) transparent;
-  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-}
-
-.location-list::-webkit-scrollbar {
-  width: 4px;
-}
-
-.location-list::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.location-list::-webkit-scrollbar-thumb {
-  background-color: rgba(200, 16, 46, 0.5);
-  border-radius: 3px;
-}
-
-/* New Animations */
-@keyframes ping {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  75%, 100% {
-    transform: scale(2);
-    opacity: 0;
-  }
-}
-
-.animate-ping {
-  animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
-
-@keyframes float {
-  0% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-  100% {
-    transform: translateY(0px);
-  }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-/* Campus point styles */
-.campus-point {
-  position: relative;
-}
-
-.campus-point::after {
-  content: '';
+/* Campus silhouette styling */
+.campus-silhouette {
+  opacity: 0.15;
   position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  border: 2px solid var(--ibero-red);
-  opacity: 0.5;
-  animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  right: 0;
+  bottom: 0;
+  width: 50%;
+  height: 70%;
+  z-index: 1;
+  pointer-events: none;
 }
 
 /* Silhouette animation */
@@ -463,49 +590,6 @@ button:active {
   opacity: 0;
 }
 
-/* Dot grid styles */
-.dot-grid {
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  gap: 2rem;
-}
-
-.dot {
-  width: 4px;
-  height: 4px;
-  background-color: var(--ibero-red);
-  border-radius: 50%;
-  opacity: 0.2;
-}
-
-/* Badge hover effect */
-.badge:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
-
-/* Landscape orientation specific adjustments */
-@media (max-width: 920px) and (orientation: landscape) {
-  .main-content {
-    padding-top: 1rem;
-  }
-  
-  h1 {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .instruction-container {
-    margin-bottom: 1rem;
-  }
-  
-  .floating-badges {
-    top: 1rem !important;
-    right: 1rem !important;
-    bottom: auto !important;
-  }
-}
-
 /* Touch-specific improvements */
 @media (hover: none) {
   button:hover {
@@ -515,10 +599,12 @@ button:active {
   .badge:hover {
     transform: none;
   }
-  
-  /* Larger touch targets */
-  .mapboxgl-popup-close-button {
-    padding: 8px;
-    font-size: 1.5rem;
-  }
+}
+
+/* Ensure content is centered vertically on all screen sizes */
+.vertical-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: calc(100vh - 80px);
 }

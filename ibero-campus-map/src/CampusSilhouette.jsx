@@ -2,62 +2,52 @@ import React from 'react';
 
 const CampusSilhouette = () => {
   return (
-    <div className="absolute right-0 top-0 h-full w-1/3 z-0 overflow-hidden pointer-events-none">
-      {/* Campus buildings silhouette SVG */}
-      <svg 
-        className="absolute right-0 bottom-0 h-full w-full opacity-10"
-        viewBox="0 0 400 600" 
-        fill="none" 
+    <div className="absolute right-0 bottom-0 w-1/2 h-70 opacity-25 pointer-events-none campus-silhouette">
+      {/* This is a simplified SVG silhouette of a campus building */}
+      <svg
+        width="100%"
+        height="100%"
+        viewBox="0 0 800 600"
+        fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        className="silhouette-reveal"
       >
-        {/* Main building */}
-        <path 
-          d="M350 400 L400 400 L400 200 L350 180 Z" 
-          fill="#C8102E" 
-          className="opacity-70"
+        <path
+          d="M700 600H100V400H150V350H200V300H250V250H350V200H400V150H450V200H500V250H550V300H600V350H650V400H700V600Z"
+          fill="#C8102E"
+          fillOpacity="0.2"
         />
-        {/* Library tower */}
-        <path 
-          d="M300 400 L350 400 L350 150 L300 170 Z" 
-          fill="#333333" 
-          className="opacity-70"
+        <path
+          d="M400 150V50H450V0H500V50H550V100H600V150H650V200H700V600H650V350H600V300H550V250H500V200H450V150H400Z"
+          fill="#C8102E"
+          fillOpacity="0.2"
         />
-        {/* Modern building */}
-        <path 
-          d="M250 400 L300 400 L300 230 L250 210 Z" 
-          fill="#C8102E" 
-          className="opacity-70"
+        <path
+          d="M200 300H250V350H200V300Z"
+          fill="#C8102E"
+          fillOpacity="0.3"
         />
-        {/* Sports complex */}
-        <path 
-          d="M180 400 L250 400 L250 250 L180 280 Z" 
-          fill="#333333" 
-          className="opacity-70"
+        <path
+          d="M300 250H350V300H300V250Z"
+          fill="#C8102E"
+          fillOpacity="0.3"
         />
-        {/* Auditorium dome */}
-        <path 
-          d="M150 400 L200 400 L200 300 C200 270 150 270 150 300 Z" 
-          fill="#C8102E" 
-          className="opacity-70"
+        <path
+          d="M450 200H500V250H450V200Z"
+          fill="#C8102E"
+          fillOpacity="0.3"
         />
-        {/* Student center */}
-        <path 
-          d="M100 400 L150 400 L150 320 L100 320 Z" 
-          fill="#333333" 
-          className="opacity-70"
+        <path
+          d="M550 300H600V350H550V300Z"
+          fill="#C8102E"
+          fillOpacity="0.3"
         />
-        {/* Ground/base */}
-        <path 
-          d="M0 400 L400 400 L400 430 L0 430 Z" 
-          fill="#555555" 
-          className="opacity-70"
+        <path
+          d="M650 400H700V450H650V400Z"
+          fill="#C8102E"
+          fillOpacity="0.3"
         />
       </svg>
-      
-      {/* Decorative elements */}
-      <div className="absolute right-8 top-1/4 w-24 h-24 rounded-full bg-red-700 opacity-5"></div>
-      <div className="absolute right-32 top-1/3 w-16 h-16 rounded-full bg-red-700 opacity-5"></div>
-      <div className="absolute right-12 top-1/2 w-32 h-32 rounded-full bg-red-700 opacity-5"></div>
     </div>
   );
 };

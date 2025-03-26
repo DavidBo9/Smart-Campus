@@ -17,14 +17,14 @@ const IberoLogo = () => (
 
 // Hand icon for drag instruction
 const HandIcon = () => (
-  <div className="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center border-2 border-dashed border-gray-400 instruction-icon">
+  <div className="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center border-2 border-dashed border-gray-400 bg-white bg-opacity-70 instruction-icon">
     <span className="text-xl md:text-2xl">👋</span>
   </div>
 );
 
 // Cursor icon for selection instruction
 const CursorIcon = () => (
-  <div className="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center border-2 border-dashed border-gray-400 instruction-icon">
+  <div className="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center border-2 border-dashed border-gray-400 bg-white bg-opacity-70 instruction-icon">
     <span className="text-xl md:text-2xl">👆</span>
   </div>
 );
@@ -92,7 +92,11 @@ const App = () => {
       // Save the map reference
       mapRef.current = map;
       
+      // Make map more visible with additional opacity adjustments
       map.on('load', () => {
+        // Make the map more visible
+        mapContainerRef.current.style.opacity = '0.7';
+        
         // Add 3D buildings with low opacity
         const layers = map.getStyle().layers;
         const labelLayerId = layers.find(
@@ -128,7 +132,7 @@ const App = () => {
                   15.05,
                   ['get', 'min_height']
                 ],
-                'fill-extrusion-opacity': 0.4
+                'fill-extrusion-opacity': 0.5 // Slightly increased opacity
               }
             },
             labelLayerId
@@ -196,11 +200,11 @@ const App = () => {
   }
 
   return (
-    <div className={`relative w-full h-screen overflow-hidden bg-beige transition-opacity duration-500 ${transitioning ? 'opacity-0' : 'opacity-100'}`}>
-      {/* Background map */}
+    <div className="relative min-h-screen overflow-auto transition-opacity duration-500 ${transitioning ? 'opacity-0' : 'opacity-100'}">
+      {/* Background map with enhanced visibility */}
       <div 
         ref={mapContainerRef}
-        className="absolute inset-0 z-0 opacity-40 transition-opacity duration-500"
+        className="absolute inset-0 z-0 transition-opacity duration-500 map-background"
       ></div>
 
       {/* Campus Silhouette Background */}
@@ -218,8 +222,8 @@ const App = () => {
         </div>
       </div>
 
-      {/* Header */}
-      <header className="relative z-10">
+      {/* Header - with glass effect */}
+      <header className="relative z-10 backdrop-blur-sm bg-transparent">
         <div className="header-content px-4 py-3 md:p-4">
           <IberoLogo />
           
@@ -234,7 +238,8 @@ const App = () => {
               </svg>
             </button>
           ) : (
-            <div className="flex items-center bg-yellow-400 rounded-full px-4 md:px-6 py-2 desktop-nav">
+            <div className="flex items-center bg-yellow-400 rounded-full px-4 md:px-6 py-2 desktop-nav"
+                 style={{ backgroundColor: 'var(--ibero-lightred)' }}>
               <button className="mr-4 px-3 py-1 rounded bg-white text-gray-800 flex items-center font-bold">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm1 5a1 1 0 100 2h12a1 1 0 100-2H4z" clipRule="evenodd" />
@@ -264,77 +269,80 @@ const App = () => {
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="relative z-10 container mx-auto px-4 md:px-6 pt-8 md:pt-16 lg:pt-24 main-content">
-        <div className="max-w-4xl">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-serif font-bold mb-4 md:mb-6 text-gray-900 animate-fade-in">
-            Explora SmartCampus
-          </h1>
-          
-          <p className="text-lg md:text-xl mb-2 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-            Conoce nuestras tecnologías en red para facilitar la comunicación y la utilización de recursos en nuestro campus.
-          </p>
-          <p className="text-lg md:text-xl mb-8 md:mb-16 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+      {/* Main Content - Centered with flex */}
+      <div className="flex flex-col justify-center items-center min-h-[calc(100vh-80px)] relative z-10">
+        <main className="container mx-auto px-4 md:px-6 main-content text-center">
+          <div className="max-w-4xl mx-auto">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-bold mb-2 md:mb-3 text-gray-900 animate-fade-in">
+              Explora SmartCampus
+            </h1>
             
-          </p>
+            <p className="text-lg md:text-xl mb-2 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+              Conoce nuestras tecnologías en red para facilitar la comunicación y la utilización de recursos en nuestro campus.
+            </p>
+            <p className="text-lg md:text-xl mb-4 md:mb-6 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+              
+            </p>
 
-          {/* Instructions */}
-          <div className="flex flex-col md:flex-row mb-8 md:mb-12 space-y-4 md:space-y-0 md:space-x-16 instruction-container">
-            <div className="flex items-start animate-fade-in instruction-item" style={{ animationDelay: '0.3s' }}>
-              <HandIcon />
-              <div className="ml-4">
-                <p className="text-base md:text-lg font-medium">Arrastra para mover</p>
-                <p className="text-gray-600 text-sm md:text-base">alrededor del mapa</p>
+            {/* Instructions - Centered */}
+            <div className="flex flex-col md:flex-row justify-center mb-4 md:mb-6 space-y-2 md:space-y-0 md:space-x-8 instruction-container">
+              <div className="flex items-center animate-fade-in instruction-item" style={{ animationDelay: '0.3s' }}>
+                <HandIcon />
+                <div className="ml-4 text-left">
+                  <p className="text-base md:text-lg font-medium">Arrastra para mover</p>
+                  <p className="text-gray-600 text-sm md:text-base">alrededor del mapa</p>
+                </div>
+              </div>
+              
+              <div className="flex items-center animate-fade-in instruction-item" style={{ animationDelay: '0.4s' }}>
+                <CursorIcon />
+                <div className="ml-4 text-left">
+                  <p className="text-base md:text-lg font-medium">Selecciona un objeto</p>
+                  <p className="text-gray-600 text-sm md:text-base">para más información</p>
+                </div>
               </div>
             </div>
-            
-            <div className="flex items-start animate-fade-in instruction-item" style={{ animationDelay: '0.4s' }}>
-              <CursorIcon />
-              <div className="ml-4">
-                <p className="text-base md:text-lg font-medium">Selecciona un objeto</p>
-                <p className="text-gray-600 text-sm md:text-base">para más información</p>
-              </div>
+
+            {/* Action Buttons - Centered */}
+            <div className="flex flex-col md:flex-row justify-center space-y-3 md:space-y-0 md:space-x-4 animate-fade-in button-container" style={{ animationDelay: '0.5s' }}>
+              <button 
+                onClick={handleShowMap}
+                className="px-6 md:px-8 py-3 bg-yellow-400 hover:text-white text-black font-bold rounded-full text-base md:text-lg transition-all duration-200 cursor-pointer shadow-md"
+                style={{ backgroundColor: 'var(--ibero-lightred)' }}
+              >
+                Entrar al Mapa
+              </button>
+              
+              <button className="px-6 md:px-8 py-3 bg-white hover:bg-gray-100 text-gray-800 font-medium rounded-full border border-gray-200 text-base md:text-lg transition-all duration-200 flex items-center justify-center shadow-md">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 md:h-5 md:w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                </svg>
+                Ver IBERO Puebla desde Arriba
+              </button>
             </div>
           </div>
+        </main>
+      </div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6 animate-fade-in button-container" style={{ animationDelay: '0.5s' }}>
-            <button 
-              onClick={handleShowMap}
-              className="px-6 md:px-8 py-3 bg-yellow-400 hover:text-white text-black font-bold rounded-full text-base md:text-lg transition-colors duration-200 cursor-pointer"
-            >
-              Entrar al Mapa
-            </button>
-            
-            <button className="px-6 md:px-8 py-3 bg-white hover:bg-gray-100 text-gray-800 font-medium rounded-full border border-gray-300 text-base md:text-lg transition-colors duration-200 flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 md:h-5 md:w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-              </svg>
-              Ver IBERO Puebla desde Arriba
-            </button>
-          </div>
-        </div>
-      </main>
-
-      {/* Floating badges - new visual elements */}
-      <div className="absolute bottom-10 right-10 z-10 flex flex-col space-y-4 animate-fade-in floating-badges" style={{ animationDelay: '0.9s' }}>
-        <div className="bg-white rounded-lg shadow-lg p-3 flex items-center space-x-3 transform hover:scale-105 transition-transform badge">
-          <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-red-700 flex items-center justify-center">
-            <span className="text-white text-base md:text-xl">🎓</span>
+      {/* Floating badges - Positioned for better visibility at all screen sizes */}
+      <div className="fixed bottom-8 right-8 z-10 flex flex-col space-y-4 animate-fade-in floating-badges" style={{ animationDelay: '0.9s' }}>
+        <div className="bg-white bg-opacity-90 backdrop-blur-sm rounded-lg shadow-lg p-4 flex items-center space-x-3 transform hover:scale-105 transition-transform badge">
+          <div className="w-10 h-10 rounded-full bg-red-700 flex items-center justify-center icon-circle">
+            <span className="text-white text-xl">🎓</span>
           </div>
           <div>
-            <a className="flex text-xs md:text-sm font-medium" href="https://www.iberopuebla.mx/oferta-academica">Programas</a>
-            <p className="flex text-xs text-gray-500 hidden sm:block">Licenciaturas y Posgrados</p>
+            <a className="flex text-sm font-medium" href="https://www.iberopuebla.mx/oferta-academica">Programas</a>
+            <p className="flex text-xs text-gray-500">Licenciaturas y Posgrados</p>
           </div>
         </div>
         
-        <div className="bg-white rounded-lg shadow-lg p-3 flex items-center space-x-3 transform hover:scale-105 transition-transform badge">
-          <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-800 flex items-center justify-center">
-            <span className="text-white text-base md:text-xl">📱</span>
+        <div className="bg-white bg-opacity-90 backdrop-blur-sm rounded-lg shadow-lg p-4 flex items-center space-x-3 transform hover:scale-105 transition-transform badge">
+          <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center icon-circle">
+            <span className="text-white text-xl">📱</span>
           </div>
           <div>
-            <a className="text-xs md:text-sm font-medium" href="https://www.iberopuebla.mx/OAT/servicios">App IBERO</a>
-            <p className="text-xs text-gray-500 hidden sm:block">Descarga en tu móvil</p>
+            <a className="text-sm font-medium" href="https://www.iberopuebla.mx/OAT/servicios">App IBERO</a>
+            <p className="text-xs text-gray-500">Descarga en tu móvil</p>
           </div>
         </div>
       </div>
